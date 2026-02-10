@@ -44,6 +44,7 @@ public class UserService {
         dto.setUuid(user.getUuid());
         dto.setName(user.getName());
         dto.setPhone(user.getPhone());
+        dto.setEmail(user.getEmail());
         dto.setTaxId(user.getTaxId());
         dto.setCreatedAt(user.getCreatedAt());
         if (user.getAddresses() != null) {
@@ -71,5 +72,15 @@ public class UserService {
             throw new Exception("Invalid password");
         }
         return convertToDTO(user);
+    }
+    public List<UserDTO> findAllFiltered(String name, String taxId, String sortBy){
+        String fieldToSort = switch (sortBy != null ? sortBy : "name"){
+            case "email" -> "email";
+            case "id" -> "id";
+            case "name" -> "name";
+            case "phone" -> "phone";
+            case "tax_id" -> "tax_id";
+            case "created_at" -> "created_at";
+        }
     }
 }

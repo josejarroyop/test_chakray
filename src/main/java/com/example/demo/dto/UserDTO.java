@@ -17,6 +17,7 @@ public class UserDTO {
     private String name;
     @NotBlank(message = "Phone is required")
     private String phone;
+    private String email;
     @NotBlank(message = "Password is required")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
