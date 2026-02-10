@@ -21,7 +21,9 @@ public class UserService {
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
-    
+    public List<UserDTO>findAll(){
+        return userRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
     public UserDTO create (User user) throws Exception{
         //if (user.getTaxId() != null) 
         if (userRepository.existsByTaxId(user.getTaxId())) throw new ResourceAlreadyExistsException("This tax id already registered");
@@ -60,5 +62,14 @@ public class UserService {
     public void delete(UUID id){
         if (!userRepository.existsByUuid(id)) throw new ResourceNotFoundException("User not found with this id");
         userRepository.deleteById(id);
+    }
+    public UserDTO login(String taxId, String password) throws Exception{
+        User user = userRepository.findByTaxId(taxId).orElseThrow(() -> new Exception("Invalid tax_id or password"));
+        //User user = userRepository.findById(taxId).orElseThrow(() -> new Exception("Invalid tax_id or password"));
+        String decrptedPassword = CryptoUtil.decrypt(user.getPassword());
+        if (!decrptedPassword.equals(password)) {
+            throw new Exception("Invalid password");
+        }
+        return convertToDTO(user);
     }
 }

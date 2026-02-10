@@ -15,4 +15,13 @@ public class CryptoUtil {
         byte [] encrypted = cipher.doFinal(value.getBytes());
         return Base64.getEncoder().encodeToString(encrypted);
     }
+    public static String decrypt(String encryptedValue) throws Exception{
+        SecretKeySpec key = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] decodedBytes = Base64.getDecoder().decode(encryptedValue);
+        byte[] decrypted = cipher.doFinal(decodedBytes);
+        return new String(decrypted);
+
+    }
 }
